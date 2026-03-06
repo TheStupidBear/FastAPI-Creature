@@ -1,12 +1,16 @@
 import sqlite3
 from model.creature import Creature
 from errors import Missing, Duplicate
+import os
 
-DB_NAME = "cryptid.db"
+# 1. Получаем путь к родительской папке (выше текущей)
+parent_dir = os.path.dirname(os.getcwd())
 
+# 2. Формируем полный путь к базе данных
+db_path = os.path.join(parent_dir, 'cryptid.db')
 #создание БД
 def init_creature():
-    conn = sqlite3.connect(DB_NAME)
+    conn = sqlite3.connect(db_path)
     curs = conn.cursor()
     curs.execute("""create table if not exists creature(
      name text primary key,
@@ -29,7 +33,7 @@ def model_to_dict(creature: Creature) -> dict:
     return creature.dict()
 
 def get_one(name: str) -> Creature:
-    conn = sqlite3.connect(DB_NAME)
+    conn = sqlite3.connect(db_path)
     curs = conn.cursor()
     qry = "select * from creature where name=:name"
     params = {"name": name}
@@ -42,7 +46,7 @@ def get_one(name: str) -> Creature:
         raise Missing(msg=f"Creature {name} not found")
 
 def get_all() -> list[Creature]:
-    conn = sqlite3.connect(DB_NAME)
+    conn = sqlite3.connect(db_path)
     curs = conn.cursor()
     qry = "select * from creature"
     curs.execute(qry)
@@ -52,7 +56,7 @@ def get_all() -> list[Creature]:
 
 def create(creature: Creature):
     if not creature: return None
-    conn = sqlite3.connect(DB_NAME)
+    conn = sqlite3.connect(db_path)
     curs = conn.cursor()
     qry = """insert into creature values
         (:name, :description, :country, :area, :aka)"""
@@ -69,7 +73,7 @@ def create(creature: Creature):
 
 def modify(creature: Creature):
     if not (creature): return None
-    conn = sqlite3.connect(DB_NAME)
+    conn = sqlite3.connect(db_path)
     curs = conn.cursor()
     qry = """update creature
      set country=:country,
@@ -89,7 +93,7 @@ def modify(creature: Creature):
 
 def delete(name: str):
     if not name: return False
-    conn = sqlite3.connect(DB_NAME)
+    conn = sqlite3.connect(db_path)
     curs = conn.cursor()
     qry = "delete from creature where name = :name"
     params = {"name": name}

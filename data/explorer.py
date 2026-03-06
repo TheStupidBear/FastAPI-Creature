@@ -1,12 +1,17 @@
 import sqlite3
 from model.explorer import Explorer
 from errors import Missing, Duplicate
+import os
 
-DB_NAME = "cryptid.db"
+# 1. Получаем путь к родительской папке (выше текущей)
+parent_dir = os.path.dirname(os.getcwd())
+
+# 2. Формируем полный путь к базе данных
+db_path = os.path.join(parent_dir, 'cryptid.db')
 
 #создание БД
 def init_explorer():
-    conn = sqlite3.connect(DB_NAME)
+    conn = sqlite3.connect(db_path)
     curs = conn.cursor()
     curs.execute("""create table if not exists explorer(
      name text primary key,
@@ -25,7 +30,7 @@ def model_to_dict(explorer: Explorer) -> dict:
     return explorer.dict()
 
 def get_one(name: str) -> Explorer:
-    conn = sqlite3.connect(DB_NAME)
+    conn = sqlite3.connect(db_path)
     curs = conn.cursor()
     qry = "select * from explorer where name=:name"
     params = {"name": name}
@@ -38,7 +43,7 @@ def get_one(name: str) -> Explorer:
         raise Missing(msg=f"Explorer {name} not found")
 
 def get_all() -> list[Explorer]:
-    conn = sqlite3.connect(DB_NAME)
+    conn = sqlite3.connect(db_path)
     curs = conn.cursor()
     qry = "select * from explorer"
     curs.execute(qry)
@@ -48,7 +53,7 @@ def get_all() -> list[Explorer]:
 
 def create(explorer: Explorer):
     if not explorer: return None
-    conn = sqlite3.connect(DB_NAME)
+    conn = sqlite3.connect(db_path)
     curs = conn.cursor()
     qry = """insert into explorer values
     (:name, :country, :description)"""
@@ -64,7 +69,7 @@ def create(explorer: Explorer):
     return get_one(explorer.name)
 
 def modify(explorer: Explorer):
-    conn = sqlite3.connect(DB_NAME)
+    conn = sqlite3.connect(db_path)
     curs = conn.cursor()
     qry = """update explorer
      set country=:country,
@@ -82,7 +87,7 @@ def modify(explorer: Explorer):
 
 def delete(name: str):
     if not name: return False
-    conn = sqlite3.connect(DB_NAME)
+    conn = sqlite3.connect(db_path)
     curs = conn.cursor()
     qry = "delete from explorer where name = :name"
     params = {"name": name}

@@ -4,6 +4,7 @@ from service import explorer as service
 from data.explorer import init_explorer
 from errors import Missing, Duplicate
 
+
 router = APIRouter(prefix="/explorer")
 
 #создаем таблицу
