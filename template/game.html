@@ -8,20 +8,20 @@
  		margin: 0 auto;
  		max-width: 700px;
 	}
-input[type=text] {
- width: 30px;
- margin: 1px;
- padding: 0px;
- border: 1px solid black;
-}
-td, th {
- cell-spacing: 4pt;
- cell-padding: 4pt;
- border: 1px solid black;
-}
-.H { background-color: #00EE00; } /* hit (green) */
-.C { background-color: #EEEE00; } /* close (yellow) */
-.M { background-color: #EEEEEE; } /* miss (gray) */
+	input[type=text] {
+ 		width: 30px;
+ 		margin: 1px;
+ 		padding: 0px;
+ 		border: 1px solid black;
+	}
+	td, th {
+ 		cell-spacing: 4pt;
+ 		cell-padding: 4pt;
+ 		border: 1px solid black;
+	}
+	.H { background-color: #00EE00; } /* hit (green) */
+	.C { background-color: #EEEE00; } /* close (yellow) */
+	.M { background-color: #EEEEEE; } /* miss (gray) */
 </style>
 </head>
 <body>
@@ -68,9 +68,11 @@ async function post_guess() {
 <span id="status"></span>
 <hr>
 <div>
-{% for letter in word %}<input type=text name="guess">{% endfor %}
-<input type=hidden id="word" value="{{word}}">
-<br><br>
-<input type=submit onclick="post_guess()">
+	{% for letter in word %}
+		<input type=text name="guess">
+	{% endfor %}
+	<input type=hidden id="word" value="{{word}}">
+	<br><br>
+	<input type=submit onclick="post_guess()">
 </div>
 </body>
