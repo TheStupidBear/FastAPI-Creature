@@ -1,5 +1,7 @@
-<html>
- <table bgcolor="#eeeeee">
+{% extends 'main.html' %}
+
+{% block content %}
+<table bgcolor="#eeeeee">
  	<tr>
  		<th colspan=3>Creatures</th>
  	</tr>
@@ -20,23 +22,4 @@
  	</tr>
  	{% endfor %}
  </table>
- <br>
-
- <table bgcolor="#dddddd">
- 	<tr>
- 		<th colspan=2>Explorers</th>
- 	</tr>
- 	<tr>
- 		<th>Name</th>
- 		<th>Country</th>
- 		<th>Description</th>
- 	</tr>
- 	{% for explorer in explorers: %}
- 	<tr>
- 		<td>{{ explorer.name }}</td>
- 		<td>{{ explorer.country }}</td>
- 		<td>{{ explorer.description }}</td>
- 	</tr>
- 	{% endfor %}
- </table>
-</html>
+{% endblock %}

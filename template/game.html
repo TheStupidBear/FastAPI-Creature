@@ -1,4 +1,6 @@
-<head>
+{% extends 'main.html' %}
+
+{% block content %}
 <style>
 	html * {
  		font-size: 20pt;
@@ -76,3 +78,4 @@ async function post_guess() {
 	<input type=submit onclick="post_guess()">
 </div>
 </body>
+{% endblock %}
