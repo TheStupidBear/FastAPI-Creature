@@ -48,7 +48,7 @@ async function post_guess() {
  for (var i = 0; i < vals.length; i++) {
  guess += vals[i].value;
  }
- var req = new Request("http://localhost:8000/game", {
+ var req = new Request("http://127.0.0.1:8000/game", {
  method: "POST",
  headers: {"Content-Type": "application/json"},
  body: JSON.stringify({"guess": guess, "word": word})
