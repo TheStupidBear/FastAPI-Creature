@@ -1,12 +1,29 @@
 <!DOCTYPE html>
 <html lang="en">
+<style>
+	html * {
+ 		font-size: 20pt;
+ 		font-family: Courier, sans-serif;
+	}
+	body {
+ 		margin: 0 auto;
+ 		max-width: 700px;
+	}
+</style>
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>Document</title>
+	<title>Сущетства и исследователи</title>
 </head>
 <body>
+	<h1>Существа и исследователи</h1>
 	<a href="/">Главная страница</a>
+
+	<form action="http://localhost:8000/" method="post">
+		Say hello to my little friend:
+		<input type="text" name="name">
+		<input type="submit">
+	</form>
 
 	{% block content %}
 	{% endblock %}

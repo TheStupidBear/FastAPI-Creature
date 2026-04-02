@@ -1,6 +1,4 @@
 from fastapi import APIRouter, HTTPException, Depends
-from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
-from datetime import timedelta
 from model.user import User
 from service import user as service
 from errors import Missing, Duplicate
@@ -12,39 +10,6 @@ router = APIRouter(prefix="/user")
 #создание таблицы БД
 init_user()
 
-# --- Новые данные auth
-# Эта зависимость создает сообщение в каталоге
-# "/user/token" (из формы с именем пользователя и паролем)
-# и возвращает токен доступа.
-oauth2_dep = OAuth2PasswordBearer(tokenUrl="token")
-
-#некорректный ввод
-def unauthed():
-    raise HTTPException(
-    status_code=401,
-    detail="Incorrect username or password",
-    headers={"WWW-Authenticate": "Bearer"},
-    )
-
-# К этой конечной точке направляется любой вызов,
-# содержащий зависимость oauth2_dep():
-@router.post("/token")
-async def create_access_token(form_data: OAuth2PasswordRequestForm = Depends()):
-    #Получение имени пользователя и пароля
-    #из формы OAuth, возврат токена доступа
-    user = service.auth_user(form_data.username, form_data.password)
-    if not user:
-        unauthed()
-    expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
-    access_token = service.create_access_token(
-    data={"sub": user.username}, expires=expires
-    )
-    return {"access_token": access_token, "token_type": "bearer"}
-
-#Возврат текущего токена доступа
-@router.get("/token")
-def get_access_token(token: str = Depends(oauth2_dep)) -> dict:
-    return {"token": token}
 
 #получение всех пользователей
 @router.get("/")

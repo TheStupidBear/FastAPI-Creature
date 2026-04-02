@@ -15,17 +15,14 @@ def init_user():
     curs = conn.cursor()
     curs.execute("""create table if not exists user(
                 name text primary key,
-                hash text)""")
-    curs.execute("""create table if not exists xuser(
-                name text primary key,
-                hash text)""")
+                password text)""")
     # Сохраняем изменения и закрываем соединение
     conn.commit()
     conn.close()
 
 def row_to_model(row: tuple) -> User:
-    name, hash = row
-    return User(name=name, hash=hash)
+    name, password = row
+    return User(name=name, password=password)
 
 def model_to_dict(user: User) -> dict:
     return user.dict()
@@ -50,35 +47,35 @@ def get_all() -> list[User]:
     return [row_to_model(row) for row in curs.fetchall()]
 
 #добавление пользователя в таблицу user или xuser
-def create(user: User, table:str = "user"):
+def create(user: User):
     if not user: return None
     conn = sqlite3.connect(db_path)
     curs = conn.cursor()
-    qry = f"""insert into {table}
-        (name, hash)
+    qry = f"""insert into user
+        (name, password)
         values
-        (:name, :hash)"""
+        (:name, :password)"""
     params = model_to_dict(user)
     try:
         curs.execute(qry, params)
     except sqlite3.IntegrityError:
         raise Duplicate(msg=
-            f"{table}: user {user.name} already exists")
+            f"user {user.name} already exists")
     # Сохраняем изменения и закрываем соединение
     conn.commit()
     conn.close()
     return get_one(user.name)
 
 def modify(name: str,user: User) -> User:
-    if not (user): return None
+    if not user: return None
     conn = sqlite3.connect(db_path)
     curs = conn.cursor()
     qry = """update user set
-    name=:name, hash=:hash
+    name=:name, password=:password
     where name=:name0"""
     params = {
         "name": user.name,
-        "hash": user.hash,
+        "password": user.password,
         "name0": name}
     curs.execute(qry, params)
     if curs.rowcount == 1:
@@ -100,5 +97,4 @@ def delete(name: str) -> None:
     curs.execute(qry, params)
     if curs.rowcount != 1:
         raise Missing(msg=f"User {name} not found")
-    create(user, table="xuser")
 
