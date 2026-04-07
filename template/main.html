@@ -7,18 +7,44 @@
 	}
 	body {
  		margin: 0 auto;
- 		max-width: 700px;
+ 		max-width: 1000px;
 	}
+	.container {
+    	display: flex; /* Активирует Flexbox */
+    	gap: 10px;    /* Расстояние между элементами */
+  		}
+  	.item {
+    	width: 50%;
+  		}
 </style>
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>Сущетства и исследователи</title>
+	<title>Существа и исследователи</title>
 </head>
 <body>
 	<h1>Существа и исследователи</h1>
-	<a href="/">Главная страница</a>
+<<<<<<< HEAD
 
+
+=======
+
+	<div class="container">
+  		<div class="item">
+			<a href="/">Главная страница</a>
+  		</div>
+  		<div class="item">
+  			<a href="https://example.com">
+    			<button>Регистрация</button>
+    		</a>
+  			<a href="https://example.com">
+    			<button>Войти</button>
+			</a>
+  		</div>
+	</div>
+	
+	
+>>>>>>> a7ef46f522381d3b1c82237a5fb2626385122db6
 	{% block content %}
 	{% endblock %}
 </body>
