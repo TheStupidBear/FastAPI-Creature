@@ -2,7 +2,7 @@
 
 {% block content %}
 	<h1>Войти в учетную запись</h1>
-	<form action="/user/registration" method="post">
+	<form action="/user/login" method="post">
 		<label for="name">Логин:</label>
 		<input type="text" name="name">
 		<p>
@@ -11,4 +11,5 @@
 		</p>
 		<input type="submit">
 	</form>
+	<h1>{{message}}</h1>
 {% endblock %}

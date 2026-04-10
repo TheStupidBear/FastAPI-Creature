@@ -12,6 +12,9 @@ def get_one(name) -> User:
 def check_user(name: str) -> bool:
     return data.check_user(name)
 
+def login_user(name: str, password: str) -> bool:
+    return data.login_user(name, password)
+
 def create(name: str, password: str) -> None:
     return data.create(name, password)
 

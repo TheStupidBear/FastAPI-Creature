@@ -41,6 +41,22 @@ def check_user(name: str) -> bool:
     else:
         return False
 
+def login_user(name: str, password: str) -> bool:
+    conn = sqlite3.connect(db_path)
+    curs = conn.cursor()
+    qry = "select * from user where name=:name"
+    params = {"name": name}
+    curs.execute(qry, params)
+    row = curs.fetchone()
+    if row: #если нашел совпадение по имени
+        if row[1] == password: #если пароли совпадают
+            return True
+        else:
+            return False
+    else:
+        return False
+
+
 def get_one(name: str) -> User:
     conn = sqlite3.connect(db_path)
     curs = conn.cursor()

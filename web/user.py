@@ -27,22 +27,41 @@ async def reg(request: Request):
 
 #post запрос регистрации
 @router.post("/registration")
-async def reg(name: str = Form(...), password: str = Form(...), repeat_password: str = Form(...)):
+async def reg(request: Request, name: str = Form(...), password: str = Form(...),
+              repeat_password: str = Form(...)):
     if password != repeat_password:
-        return f"Пароли не совпадают"
+        message = "Пароли не совпадают"
+        return template_obj.TemplateResponse("registration.html",
+                                             {"request": request, "message": message})
     else:
         if service.check_user(name) == True: #если есть в БД такой пользователь
-            return f"Такой пользователь уже есть"
+            message = "Такой пользователь уже есть"
+            return template_obj.TemplateResponse("registration.html",
+                                                 {"request": request, "message": message})
         else:
             service.create(name, password)
-            return f"Записали в БД"
+            message = "Записали в БД"
+            return template_obj.TemplateResponse("index.html",
+                                                 {"request": request, "message": message})
 
-
-#страница входа
+#страница входа в учетную запись
 @router.get("/login")
-async def login(request: Request):
+async def reg(request: Request):
     return template_obj.TemplateResponse("login.html",
                                          {"request": request})
+
+#страница входа
+@router.post("/login")
+async def login(request: Request, name: str = Form(...), password: str = Form(...)):
+    if service.login_user(name, password) == True: #если есть такой пользователь в БД (правильный пароль)
+        message = f"Привет, {name}"
+        return template_obj.TemplateResponse("index.html",
+                                             {"request": request, "message": message})
+    else:
+        message = "Пароль и логин не совпадают"
+        return template_obj.TemplateResponse("login.html",
+                                             {"request": request, "message": message})
+
 
 #создание пользователя
 # @router.post("/", status_code=201)
