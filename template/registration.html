@@ -1,0 +1,18 @@
+{% extends 'main.html' %}
+
+{% block content %}
+	<h1>Регистрация</h1>
+	<form action="/user/registration" method="post">
+		<label for="name">Логин:</label>
+		<input type="text" name="name">
+		<p>
+			<label for="password">Пароль:</label>
+			<input type="password" name="password">
+		</p>
+		<p>
+			<label for="password">Повторите пароль:</label>
+			<input type="password" name="repeat_password">
+		</p>
+		<input type="submit">
+	</form>
+{% endblock %}

@@ -9,8 +9,11 @@ def get_all() -> list[User]:
 def get_one(name) -> User:
     return data.get_one(name)
 
-def create(user: User) -> User:
-    return data.create(user)
+def check_user(name: str) -> bool:
+    return data.check_user(name)
+
+def create(name: str, password: str) -> None:
+    return data.create(name, password)
 
 def modify(name: str, user: User) -> User:
     return data.modify(name, user)

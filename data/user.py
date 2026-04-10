@@ -27,6 +27,20 @@ def row_to_model(row: tuple) -> User:
 def model_to_dict(user: User) -> dict:
     return user.dict()
 
+#если есть такой пользователь в БД возвращает True
+def check_user(name: str) -> bool:
+    conn = sqlite3.connect(db_path)
+    curs = conn.cursor()
+    qry = "select * from user where name=:name"
+    params = {"name": name}
+    curs.execute(qry, params)
+    row = curs.fetchone()
+    #если нашел совпадение
+    if row:
+        return True
+    else:
+        return False
+
 def get_one(name: str) -> User:
     conn = sqlite3.connect(db_path)
     curs = conn.cursor()
@@ -46,25 +60,23 @@ def get_all() -> list[User]:
     curs.execute(qry)
     return [row_to_model(row) for row in curs.fetchall()]
 
-#добавление пользователя в таблицу user или xuser
-def create(user: User):
-    if not user: return None
+#добавление пользователя в таблицу user
+def create(name: str, password: str) -> None:
     conn = sqlite3.connect(db_path)
     curs = conn.cursor()
     qry = f"""insert into user
         (name, password)
         values
         (:name, :password)"""
-    params = model_to_dict(user)
+    params = {"name": name, "password": password}
     try:
         curs.execute(qry, params)
     except sqlite3.IntegrityError:
         raise Duplicate(msg=
-            f"user {user.name} already exists")
+            f"Пользователь {name} уже существует")
     # Сохраняем изменения и закрываем соединение
     conn.commit()
     conn.close()
-    return get_one(user.name)
 
 def modify(name: str,user: User) -> User:
     if not user: return None
