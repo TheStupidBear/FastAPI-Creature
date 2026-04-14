@@ -4,3 +4,4 @@ class Explorer(BaseModel):
     name: str
     country: str
     description: str
+    user: str

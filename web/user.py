@@ -36,9 +36,11 @@ async def reg(request: Request, name: str = Form(...), password: str = Form(...)
                                                  {"request": request, "message": message})
         else:
             service.create(name, password)
+            success_login = 1
             message = f"Привет, {name}"
             return template_obj.TemplateResponse("index.html",
-                                                 {"request": request, "message": message})
+                                                 {"request": request, "message": message,
+                                                  "success_login": success_login})
 
 #страница входа в учетную запись
 @router.get("/login")

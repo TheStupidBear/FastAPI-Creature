@@ -17,16 +17,17 @@ def init_creature():
      description text,
      country text,
      area text,
-     aka text)""")
+     aka text,
+     user text)""")
     # Сохраняем изменения и закрываем соединение
     conn.commit()
     conn.close()
 
 #преобразует кортеж в обьект модели
 def row_to_model(row: tuple) -> Creature:
-    name, description, country, area, aka = row
+    name, description, country, area, aka, user = row
     return Creature(name=name, description=description,
-                    country=country, area=area, aka=aka)
+                    country=country, area=area, aka=aka, user=user)
 
 #преобразует обьект модели в словарь
 def model_to_dict(creature: Creature) -> dict:
@@ -59,7 +60,7 @@ def create(creature: Creature):
     conn = sqlite3.connect(db_path)
     curs = conn.cursor()
     qry = """insert into creature values
-        (:name, :description, :country, :area, :aka)"""
+        (:name, :description, :country, :area, :aka, :user)"""
     params = model_to_dict(creature)
     try:
         curs.execute(qry, params)

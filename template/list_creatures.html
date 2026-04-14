@@ -11,6 +11,8 @@
  		<th>Страна</th>
  		<th>Зона обитания</th>
  		<th>Псевдоним</th>
+ 		<th>Пользователь</th>
+
  	</tr>
  	{% for creature in creatures: %}
  	<tr>
@@ -19,6 +21,7 @@
  		<td>{{ creature.country }}</td>
  		<td>{{ creature.area }}</td>
  		<td>{{ creature.aka }}</td>
+ 		<td>{{ creature.user }}</td>
  	</tr>
  	{% endfor %}
  </table>

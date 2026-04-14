@@ -16,14 +16,15 @@ def init_explorer():
     curs.execute("""create table if not exists explorer(
      name text primary key,
      country text,
-     description text)""")
+     description text,
+     user text)""")
     # Сохраняем изменения и закрываем соединение
     conn.commit()
     conn.close()
 
 #преобразует кортеж в обьект модели
 def row_to_model(row: tuple) -> Explorer:
-    return Explorer(name=row[0], country=row[1], description=row[2])
+    return Explorer(name=row[0], country=row[1], description=row[2], user=row[3])
 
 #преобразует обьект модели в словарь
 def model_to_dict(explorer: Explorer) -> dict:
@@ -56,7 +57,7 @@ def create(explorer: Explorer):
     conn = sqlite3.connect(db_path)
     curs = conn.cursor()
     qry = """insert into explorer values
-    (:name, :country, :description)"""
+    (:name, :country, :description, :user)"""
     params = model_to_dict(explorer)
     try:
         curs.execute(qry, params)

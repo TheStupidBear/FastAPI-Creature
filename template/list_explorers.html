@@ -10,12 +10,14 @@
  		<th>Имя</th>
  		<th>Страна</th>
  		<th>Описание</th>
+ 		<th>Пользователь</th>
  	</tr>
  	{% for explorer in explorers: %}
  	<tr>
  		<td>{{ explorer.name }}</td>
  		<td>{{ explorer.country }}</td>
  		<td>{{ explorer.description }}</td>
+ 		<td>{{ explorer.user }}</td>
  	</tr>
  	{% endfor %}
  </table>
