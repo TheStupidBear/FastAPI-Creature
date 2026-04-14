@@ -1,5 +1,6 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 class User(BaseModel):
     name: str
-    hash: str
+    password: str
+    is_superuser: int = Field(default=0)

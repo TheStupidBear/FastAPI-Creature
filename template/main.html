@@ -30,12 +30,15 @@
 			<a href="/">Главная страница</a>
   		</div>
   		<div class="item">
+  			{%if success_login != 1 %}
   			<a href="/user/registration">
     			<button>Регистрация</button>
     		</a>
   			<a href="/user/login">
     			<button>Войти</button>
 			</a>
+			{% endif %}
+			<h1>{{message}}</h1>
   		</div>
 	</div>
 	

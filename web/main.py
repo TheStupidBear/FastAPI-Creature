@@ -1,11 +1,9 @@
-from fastapi import FastAPI, Request, status
+from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 import uvicorn
 from pathlib import Path
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
-from fastapi.exceptions import RequestValidationError
-from fastapi.responses import JSONResponse
 from web import explorer, creature, user, game
 
 

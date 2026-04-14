@@ -15,14 +15,15 @@ def init_user():
     curs = conn.cursor()
     curs.execute("""create table if not exists user(
                 name text primary key,
-                password text)""")
+                password text,
+                is_superuser integer)""")
     # Сохраняем изменения и закрываем соединение
     conn.commit()
     conn.close()
 
 def row_to_model(row: tuple) -> User:
-    name, password = row
-    return User(name=name, password=password)
+    name, password, is_superuser = row
+    return User(name=name, password=password, is_superuser=is_superuser)
 
 def model_to_dict(user: User) -> dict:
     return user.dict()
@@ -81,10 +82,10 @@ def create(name: str, password: str) -> None:
     conn = sqlite3.connect(db_path)
     curs = conn.cursor()
     qry = f"""insert into user
-        (name, password)
+        (name, password, is_superuser)
         values
-        (:name, :password)"""
-    params = {"name": name, "password": password}
+        (:name, :password, :issuperuser)"""
+    params = {"name": name, "password": password, "issuperuser": 0}
     try:
         curs.execute(qry, params)
     except sqlite3.IntegrityError:

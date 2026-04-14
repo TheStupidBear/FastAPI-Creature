@@ -1,11 +1,7 @@
-from fastapi import APIRouter, HTTPException, Request, Form, status
+from fastapi import APIRouter, Request, Form
 from pathlib import Path
 from fastapi.templating import Jinja2Templates
-from fastapi.responses import RedirectResponse, JSONResponse
-from fastapi.exceptions import RequestValidationError
-from model.user import User
 from service import user as service
-from errors import Missing, Duplicate
 from data.user import init_user
 
 
@@ -40,7 +36,7 @@ async def reg(request: Request, name: str = Form(...), password: str = Form(...)
                                                  {"request": request, "message": message})
         else:
             service.create(name, password)
-            message = "Записали в БД"
+            message = f"Привет, {name}"
             return template_obj.TemplateResponse("index.html",
                                                  {"request": request, "message": message})
 
@@ -55,21 +51,14 @@ async def reg(request: Request):
 async def login(request: Request, name: str = Form(...), password: str = Form(...)):
     if service.login_user(name, password) == True: #если есть такой пользователь в БД (правильный пароль)
         message = f"Привет, {name}"
+        success_login = 1
         return template_obj.TemplateResponse("index.html",
-                                             {"request": request, "message": message})
+                                             {"request": request, "message": message,
+                                              "success_login": success_login})
     else:
         message = "Пароль и логин не совпадают"
         return template_obj.TemplateResponse("login.html",
                                              {"request": request, "message": message})
-
-
-#создание пользователя
-# @router.post("/", status_code=201)
-# def create(user: User) -> User:
-#     try:
-#         return service.create(user)
-#     except Duplicate as exc:
-#         raise HTTPException(status_code=409, detail=exc.msg)
 
 
 
