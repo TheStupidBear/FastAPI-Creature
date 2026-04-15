@@ -2,7 +2,6 @@ from model.user import User
 from data import user as data
 
 
-
 def get_all() -> list[User]:
     return data.get_all()
 
@@ -15,8 +14,8 @@ def check_user(name: str) -> bool:
 def login_user(name: str, password: str) -> bool:
     return data.login_user(name, password)
 
-def create(name: str, password: str) -> None:
-    return data.create(name, password)
+def create(user: User) -> None:
+    return data.create(user)
 
 def modify(name: str, user: User) -> User:
     return data.modify(name, user)
