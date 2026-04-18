@@ -7,7 +7,6 @@ from fastapi.templating import Jinja2Templates
 from web import explorer, creature, user, game
 
 
-
 app = FastAPI()
 app.include_router(explorer.router)
 app.include_router(creature.router)

@@ -1,11 +1,12 @@
-from fastapi import APIRouter, Request, Form, Depends
+from fastapi import APIRouter, Depends, HTTPException, status, Request, Form
 from pathlib import Path
 from fastapi.templating import Jinja2Templates
 from typing import Annotated
-from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
+from fastapi.security import OAuth2PasswordRequestForm
 from service import user as service
 from data.user import init_user
-from model.user import User
+from model.user import User, Token
+from core.security import create_access_token
 
 
 router = APIRouter(prefix="/user")
@@ -13,40 +14,37 @@ router = APIRouter(prefix="/user")
 parent_dir = Path(__file__).resolve().parent.parent
 template_obj = Jinja2Templates(directory=f"{parent_dir}/template")
 
-fake_users_db = {
-    "johndoe": {
-        "username": "johndoe",
-        "hashed_password": "fakehashedsecret",
-        "is_superuser": 0,
-    },
-    "alice": {
-        "username": "alice",
-        "hashed_password": "fakehashedsecret2",
-        "is_superuser": 0,
-    },
-}
+#страница входа в учетную запись
+@router.get("/login")
+async def reg(request: Request):
+    return template_obj.TemplateResponse("login.html",
+                                         {"request": request})
 
-def fake_hash_password(password: str):
-    return "fakehashed" + password
+#Логин пользователя. Принимает username и password (form-data), возвращает JWT токен.
+@router.post("/login", response_model=Token)
+async def login(request: Request, form_data: OAuth2PasswordRequestForm = Depends()):
+    # Проверяем пользователя
+    user = service.authenticate_user(form_data.username, form_data.password)
+    print(form_data.username, form_data.password)
+    if not user:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Incorrect username or password",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
 
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
-
-@router.get("/items/")
-async def read_items(token: Annotated[str, Depends(oauth2_scheme)]):
-    return {"token": token}
-
-def fake_decode_token(token):
-    return User(
-        username=token + "fakedecoded", hashed_password="1234", is_superuser=0
-    )
-
-async def get_current_user(token: Annotated[str, Depends(oauth2_scheme)]):
-    user = fake_decode_token(token)
-    return user
+    # Создаём токен
+    create_access_token(data={"sub": user.username})
+    message = f"Привет, {form_data.username}"
+    success_login = 1
+    return template_obj.TemplateResponse("index.html",
+                                        {"request": request, "message": message,
+                                        "success_login": success_login})
 
 
+#Возвращает информацию о текущем пользователе. Требует валидный JWT токен в заголовке Authorization.
 @router.get("/me")
-async def read_users_me(current_user: Annotated[User, Depends(get_current_user)]):
+async def read_users_me(current_user: Annotated[User, Depends(service.get_current_user)]):
     return current_user
 
 
@@ -82,11 +80,7 @@ async def read_users_me(current_user: Annotated[User, Depends(get_current_user)]
 #                                                  {"request": request, "message": message,
 #                                                   "success_login": success_login})
 #
-# #страница входа в учетную запись
-# @router.get("/login")
-# async def reg(request: Request):
-#     return template_obj.TemplateResponse("login.html",
-#                                          {"request": request})
+
 #
 # #страница входа
 # @router.post("/login")
