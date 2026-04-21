@@ -2,64 +2,59 @@ from fastapi import APIRouter, Depends, HTTPException, status, Request, Form
 from pathlib import Path
 from fastapi.templating import Jinja2Templates
 from typing import Annotated
-from fastapi.security import OAuth2PasswordRequestForm
+from fastapi.security import HTTPBasic, HTTPBasicCredentials
+import secrets
 from service import user as service
 from data.user import init_user
-from model.user import User, Token
-from core.security import create_access_token
 
 
 router = APIRouter(prefix="/user")
+
+security = HTTPBasic()
+
+# #создание таблицы БД
+init_user()
 
 parent_dir = Path(__file__).resolve().parent.parent
 template_obj = Jinja2Templates(directory=f"{parent_dir}/template")
 
 #страница входа в учетную запись
 @router.get("/login")
-async def reg(request: Request):
+async def login_get(request: Request):
     return template_obj.TemplateResponse("login.html",
                                          {"request": request})
 
-#Логин пользователя. Принимает username и password (form-data), возвращает JWT токен.
-@router.post("/login", response_model=Token)
-async def login(request: Request, form_data: OAuth2PasswordRequestForm = Depends()):
-    # Проверяем пользователя
-    user = service.authenticate_user(form_data.username, form_data.password)
-    print(form_data.username, form_data.password)
-    if not user:
+#отправка формы (войти в учетную запись)
+@router.post("/login")
+def login_post(request: Request,
+    credentials: Annotated[HTTPBasicCredentials, Depends(security)],
+    ):
+    if service.login_user(credentials): #если прошла аутентификация
+        message = f"Привет, {credentials.username}"
+        success_login = 1
+        return template_obj.TemplateResponse("index.html",
+                                             {"request": request, "message": message,
+                                              "success_login": success_login})
+    else:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Incorrect username or password",
-            headers={"WWW-Authenticate": "Bearer"},
+            headers={"WWW-Authenticate": "Basic"},
         )
 
-    # Создаём токен
-    create_access_token(data={"sub": user.username})
-    message = f"Привет, {form_data.username}"
-    success_login = 1
-    return template_obj.TemplateResponse("index.html",
-                                        {"request": request, "message": message,
-                                        "success_login": success_login})
 
-
-#Возвращает информацию о текущем пользователе. Требует валидный JWT токен в заголовке Authorization.
 @router.get("/me")
-async def read_users_me(current_user: Annotated[User, Depends(service.get_current_user)]):
-    return current_user
+def read_current_user(credentials: Annotated[HTTPBasicCredentials, Depends(security)]):
+    return {"username": credentials.username, "password": credentials.password}
+
+#страница регистрации
+@router.get("/registration")
+async def reg(request: Request):
+    return template_obj.TemplateResponse("registration.html",
+                                         {"request": request})
 
 
-# #создание таблицы БД
-# init_user()
-#
-# #страница регистрации
-# @router.get("/registration")
-# async def reg(request: Request):
-#     return template_obj.TemplateResponse("registration.html",
-#                                          {"request": request})
-#
-#
-#
-# #post запрос регистрации
+#post запрос регистрации
 # @router.post("/registration")
 # async def reg(request: Request, name: str = Form(...), password: str = Form(...),
 #               repeat_password: str = Form(...)):
@@ -79,23 +74,6 @@ async def read_users_me(current_user: Annotated[User, Depends(service.get_curren
 #             return template_obj.TemplateResponse("index.html",
 #                                                  {"request": request, "message": message,
 #                                                   "success_login": success_login})
-#
-
-#
-# #страница входа
-# @router.post("/login")
-# async def login(request: Request, name: str = Form(...), password: str = Form(...)):
-#     if service.login_user(name, password) == True: #если есть такой пользователь в БД (правильный пароль)
-#         message = f"Привет, {name}"
-#         success_login = 1
-#         return template_obj.TemplateResponse("index.html",
-#                                              {"request": request, "message": message,
-#                                               "success_login": success_login})
-#     else:
-#         message = "Пароль и логин не совпадают"
-#         return template_obj.TemplateResponse("login.html",
-#                                              {"request": request, "message": message})
-
 
 
 #получение всех пользователей

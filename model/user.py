@@ -2,13 +2,7 @@ from pydantic import BaseModel, Field
 
 class User(BaseModel):
     username: str
-    hashed_password: str
+    password: str
     is_superuser: int = Field(default=0)
 
-class Token(BaseModel):
-    access_token: str
-    token_type: str
 
-
-class TokenData(BaseModel):
-    username: str | None = None
