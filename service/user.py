@@ -9,21 +9,20 @@ def login_user(credentials) -> bool:
             return False
     return False
 
-
-def get_all() -> list[User]:
-    return data.get_all()
-
-def get_one(name) -> User:
-    return data.get_one(name)
-
-def check_user(name: str) -> bool:
-    return data.check_user(name)
+def check_user(username: str) -> bool:
+    return data.check_user(username)
 
 def create(user: User) -> None:
     return data.create(user)
 
-def modify(name: str, user: User) -> User:
-    return data.modify(name, user)
-
-def delete(name: str) -> None:
-    return data.delete(name)
+# def get_all() -> list[User]:
+#     return data.get_all()
+#
+# def get_one(name) -> User:
+#     return data.get_one(name)
+#
+# def modify(name: str, user: User) -> User:
+#     return data.modify(name, user)
+#
+# def delete(name: str) -> None:
+#     return data.delete(name)

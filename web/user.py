@@ -6,6 +6,7 @@ from fastapi.security import HTTPBasic, HTTPBasicCredentials
 import secrets
 from service import user as service
 from data.user import init_user
+from model.user import User
 
 
 router = APIRouter(prefix="/user")
@@ -18,11 +19,6 @@ init_user()
 parent_dir = Path(__file__).resolve().parent.parent
 template_obj = Jinja2Templates(directory=f"{parent_dir}/template")
 
-#страница входа в учетную запись
-@router.get("/login")
-async def login_get(request: Request):
-    return template_obj.TemplateResponse("login.html",
-                                         {"request": request})
 
 #отправка формы (войти в учетную запись)
 @router.post("/login")
@@ -31,16 +27,17 @@ def login_post(request: Request,
     ):
     if service.login_user(credentials): #если прошла аутентификация
         message = f"Привет, {credentials.username}"
-        success_login = 1
         return template_obj.TemplateResponse("index.html",
-                                             {"request": request, "message": message,
-                                              "success_login": success_login})
+                                             {"request": request, "message": message})
     else:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Incorrect username or password",
             headers={"WWW-Authenticate": "Basic"},
         )
+        # message = f"Неправильный логин и пароль"
+        # return template_obj.TemplateResponse("index.html",
+        #                                  {"request": request, "message": message})
 
 
 @router.get("/me")
@@ -55,25 +52,31 @@ async def reg(request: Request):
 
 
 #post запрос регистрации
-# @router.post("/registration")
-# async def reg(request: Request, name: str = Form(...), password: str = Form(...),
-#               repeat_password: str = Form(...)):
-#     if password != repeat_password:
-#         message = "Пароли не совпадают"
-#         return template_obj.TemplateResponse("registration.html",
-#                                              {"request": request, "message": message})
-#     else:
-#         if service.check_user(name) == True: #если есть в БД такой пользователь
-#             message = "Такой пользователь уже есть"
-#             return template_obj.TemplateResponse("registration.html",
-#                                                  {"request": request, "message": message})
-#         else:
-#             service.create(name, password)
-#             success_login = 1
-#             message = f"Привет, {name}"
-#             return template_obj.TemplateResponse("index.html",
-#                                                  {"request": request, "message": message,
-#                                                   "success_login": success_login})
+@router.post("/registration")
+async def reg(request: Request, username: str = Form(...), password: str = Form(...),
+              repeat_password: str = Form(...)):
+    #проверка паролей (они одинаковы или нет)
+    current_password_bytes = password.encode("utf8")
+    correct_password_bytes = repeat_password.encode("utf8")
+    is_correct_password = secrets.compare_digest(
+        current_password_bytes, correct_password_bytes
+    )
+    if not is_correct_password:  # если пароли совпадают
+        message = "Пароли не совпадают"
+        return template_obj.TemplateResponse("registration.html",
+                                             {"request": request, "message": message})
+    else:
+        if service.check_user(username):  # если есть в БД такой пользователь
+            message = "Такой пользователь уже есть"
+            return template_obj.TemplateResponse("registration.html",
+                                                 {"request": request, "message": message})
+        else:
+            service.create(User(username=username, password=password))
+            message = f"Привет, {username}"
+            return template_obj.TemplateResponse("index.html",
+                                                 {"request": request, "message": message})
+
+
 
 
 #получение всех пользователей
