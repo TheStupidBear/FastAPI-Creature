@@ -39,9 +39,8 @@ def login_post(request: Request,
         # return template_obj.TemplateResponse("index.html",
         #                                  {"request": request, "message": message})
 
-
 @router.get("/me")
-def read_current_user(credentials: Annotated[HTTPBasicCredentials, Depends(security)]):
+def get_current_user(credentials: Annotated[HTTPBasicCredentials, Depends(security)]):
     return {"username": credentials.username, "password": credentials.password}
 
 #страница регистрации
