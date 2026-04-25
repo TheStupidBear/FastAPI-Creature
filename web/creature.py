@@ -5,6 +5,8 @@ from service import creature as service
 from data.creature import init_creature
 from errors import Missing, Duplicate
 from pathlib import Path
+from web.user import get_user_depends
+
 
 
 router = APIRouter(prefix="/creature")
@@ -30,13 +32,13 @@ def get_one(name) -> Creature:
         raise HTTPException(status_code=404, detail=exc.msg)
 
 #создать существо
-@router.post("", status_code=201)
-@router.post("/", status_code=201)
-def create(creature: Creature) -> Creature:
-    try:
-        return service.create(creature)
-    except Duplicate as exc:
-        raise HTTPException(status_code=404, detail=exc.msg)
+@router.post("/add", status_code=201)
+def create(get_user: get_user_depends):
+    return "Add creature"
+    # try:
+    #     return service.create(creature)
+    # except Duplicate as exc:
+    #     raise HTTPException(status_code=404, detail=exc.msg)
 
 # @router.patch("/{name}")
 # def modify(name, creature: Creature) -> Creature:

@@ -19,6 +19,11 @@ init_user()
 parent_dir = Path(__file__).resolve().parent.parent
 template_obj = Jinja2Templates(directory=f"{parent_dir}/template")
 
+def get_current_user(credentials: Annotated[HTTPBasicCredentials, Depends(security)]):
+    return {"username": credentials.username}
+#зависимость (только для авторизованных пользователей)
+get_user_depends = Annotated[dict, Depends(get_current_user)]
+
 
 #отправка формы (войти в учетную запись)
 @router.post("/login")
@@ -39,13 +44,14 @@ def login_post(request: Request,
         # return template_obj.TemplateResponse("index.html",
         #                                  {"request": request, "message": message})
 
-@router.get("/me")
-def get_current_user(credentials: Annotated[HTTPBasicCredentials, Depends(security)]):
-    return {"username": credentials.username, "password": credentials.password}
+
+
+
 
 #страница регистрации
 @router.get("/registration")
-async def reg(request: Request):
+async def reg(request: Request, get_user: Annotated[dict, Depends(get_current_user)]):
+    print(get_user)
     return template_obj.TemplateResponse("registration.html",
                                          {"request": request})
 
