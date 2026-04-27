@@ -31,14 +31,16 @@ def get_one(name) -> Creature:
     except Missing as exc:
         raise HTTPException(status_code=404, detail=exc.msg)
 
-#создать существо
+#post запрос от кнопки: Добавить существо
 @router.post("/add", status_code=201)
-def create(get_user: get_user_depends):
-    return "Add creature"
-    # try:
-    #     return service.create(creature)
-    # except Duplicate as exc:
-    #     raise HTTPException(status_code=404, detail=exc.msg)
+def create(request: Request, get_user: get_user_depends):
+    return template_obj.TemplateResponse("create_creature.html",
+                                         {"request": request})
+
+
+@router.post("/create", status_code=201)
+def create(request: Request, get_user: get_user_depends):
+    return f"Добавить существо"
 
 # @router.patch("/{name}")
 # def modify(name, creature: Creature) -> Creature:

@@ -32,9 +32,9 @@
 	<div class="container">
   		<div class="item">
 			<a href="/">Главная страница</a>
-			{% block content %}
-			{% endblock %}
-
+			<a href="/creature">Существа</a>
+			<a href="/explorer">Исследователи</a>
+			<a href="/game">Сыграть в игру</a>
   		</div>
   		<div class="item">
   			<div class="user">
@@ -47,6 +47,12 @@
     		</div>
     		<h1>{{message}}</h1>
   		</div>
+	</div>
+
+	<div class="body">
+		<p></p>
+		{% block content %}
+		{% endblock %}
 	</div>
 	
 	

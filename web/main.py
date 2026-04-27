@@ -33,7 +33,7 @@ template_obj = Jinja2Templates(directory=f"{parent_dir}/template")
 #главная страница
 @app.get("/")
 async def top(request: Request):
-    return template_obj.TemplateResponse("index.html",
+    return template_obj.TemplateResponse("main.html",
                                          {"request": request})
 
 

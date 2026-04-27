@@ -1,0 +1,28 @@
+{% extends 'main.html' %}
+
+{% block content %}
+	<h1>Добавить существо</h1>
+	<form action="/creature/create" method="post">
+		<p>
+		<label for="name">Название:</label>
+		<input type="text" name="name">
+		</p>
+		<p>
+			<label for="country">Страна:</label>
+			<input type="text" name="country">
+		</p>
+		<p>
+			<label for="area">Зона обитания:</label>
+			<input type="text" name="area">
+		</p>
+		<p>
+			<label for="description">Описание:</label>
+			<input type="text" name="description">
+		</p>
+		<p>
+			<label for="aka">Псевдоним:</label>
+			<input type="text" name="aka">
+		</p>
+		<button type="submit">Добавить существо</button>
+	</form>
+{% endblock %}

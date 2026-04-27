@@ -32,7 +32,7 @@ def login_post(request: Request,
     ):
     if service.login_user(credentials): #если прошла аутентификация
         message = f"Привет, {credentials.username}"
-        return template_obj.TemplateResponse("index.html",
+        return template_obj.TemplateResponse("main.html",
                                              {"request": request, "message": message})
     else:
         raise HTTPException(
@@ -78,7 +78,7 @@ async def reg(request: Request, username: str = Form(...), password: str = Form(
         else:
             service.create(User(username=username, password=password))
             message = f"Привет, {username}"
-            return template_obj.TemplateResponse("index.html",
+            return template_obj.TemplateResponse("main.html",
                                                  {"request": request, "message": message})
 
 
