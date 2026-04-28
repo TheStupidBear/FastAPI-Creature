@@ -1,6 +1,10 @@
 {% extends 'main.html' %}
 
 {% block content %}
+ <form action="/explorer/add" method="POST">
+    <button type="submit">Добавить исследователя</button>
+ </form>
+ <h1>{{message_explorer}}</h1>
 
  <table bgcolor="#dddddd">
  	<tr>

@@ -1,0 +1,21 @@
+{% extends 'main.html' %}
+
+{% block content %}
+	<h1>Добавить исследователя</h1>
+	<form action="/explorer/create" method="post">
+		<p>
+		<label for="name">Имя:*</label>
+		<input type="text" name="name">
+		</p>
+		<p>
+			<label for="country">Страна:*</label>
+			<input type="text" name="country">
+		</p>
+		<p>
+			<label for="description">Описание:*</label>
+			<input type="text" name="description">
+		</p>
+		<button type="submit">Добавить исследователя</button>
+	</form>
+	<p>* - обязательные поля</p>
+{% endblock %}

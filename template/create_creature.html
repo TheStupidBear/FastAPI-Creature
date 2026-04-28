@@ -4,11 +4,11 @@
 	<h1>Добавить существо</h1>
 	<form action="/creature/create" method="post">
 		<p>
-		<label for="name">Название:</label>
+		<label for="name">Название:*</label>
 		<input type="text" name="name">
 		</p>
 		<p>
-			<label for="country">Страна:</label>
+			<label for="country">Страна:*</label>
 			<input type="text" name="country">
 		</p>
 		<p>
@@ -16,7 +16,7 @@
 			<input type="text" name="area">
 		</p>
 		<p>
-			<label for="description">Описание:</label>
+			<label for="description">Описание:*</label>
 			<input type="text" name="description">
 		</p>
 		<p>
@@ -25,4 +25,5 @@
 		</p>
 		<button type="submit">Добавить существо</button>
 	</form>
+	<p>* - обязательные поля</p>
 {% endblock %}

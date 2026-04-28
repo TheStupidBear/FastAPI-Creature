@@ -1,9 +1,10 @@
-from fastapi import APIRouter, HTTPException, Request
+from fastapi import APIRouter, HTTPException, Request, Form
 from fastapi.templating import Jinja2Templates
+from typing import Annotated, Optional
 from model.creature import Creature
 from service import creature as service
 from data.creature import init_creature
-from errors import Missing, Duplicate
+from errors import Missing
 from pathlib import Path
 from web.user import get_user_depends
 
@@ -24,13 +25,6 @@ def get_all(request: Request):
                                          {"request": request,
                                           "creatures": service.get_all()})
 
-@router.get("/{name}")
-def get_one(name) -> Creature:
-    try:
-        return service.get_one(name)
-    except Missing as exc:
-        raise HTTPException(status_code=404, detail=exc.msg)
-
 #post запрос от кнопки: Добавить существо
 @router.post("/add", status_code=201)
 def create(request: Request, get_user: get_user_depends):
@@ -39,8 +33,26 @@ def create(request: Request, get_user: get_user_depends):
 
 
 @router.post("/create", status_code=201)
-def create(request: Request, get_user: get_user_depends):
-    return f"Добавить существо"
+def create(request: Request, get_user: get_user_depends,
+           name: Annotated[str, Form()],
+           country: Annotated[str, Form()],
+           description: Annotated[str, Form()],
+           area: Annotated[Optional[str], Form()] = "*",
+           aka: Annotated[Optional[str], Form()] = "*"):
+    service.create(Creature(name=name, country=country,
+    description=description, area=area, aka=aka, user=get_user["username"]))
+    message_creature = f"Существо {name} было добавлено."
+    return template_obj.TemplateResponse("list_creatures.html",
+                                         {"request": request,
+                                          "creatures": service.get_all(),
+                                          "message_creature": message_creature})
+
+@router.get("/{name}")
+def get_one(name) -> Creature:
+    try:
+        return service.get_one(name)
+    except Missing as exc:
+        raise HTTPException(status_code=404, detail=exc.msg)
 
 # @router.patch("/{name}")
 # def modify(name, creature: Creature) -> Creature:
