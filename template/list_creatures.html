@@ -26,6 +26,16 @@
  		<td>{{ creature.area }}</td>
  		<td>{{ creature.aka }}</td>
  		<td>{{ creature.user }}</td>
+ 		<td>
+ 			<form action="/creature/edit" method="POST">
+    				<button type="submit">🖊️</button>
+			</form>
+ 		</td>
+ 		<td>
+ 			<form action="/creature/delete" method="POST">
+    				<button type="submit">🗑️</button>
+			</form>
+ 		</td>
  	</tr>
  	{% endfor %}
  </table>

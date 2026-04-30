@@ -31,7 +31,7 @@ def create(request: Request, get_user: get_user_depends):
     return template_obj.TemplateResponse("create_creature.html",
                                          {"request": request})
 
-
+#создать существо
 @router.post("/create", status_code=201)
 def create(request: Request, get_user: get_user_depends,
            name: Annotated[str, Form()],
@@ -47,6 +47,20 @@ def create(request: Request, get_user: get_user_depends,
                                           "creatures": service.get_all(),
                                           "message_creature": message_creature})
 
+#изменить существо
+@router.post("/edit")
+def modify():
+    return f"Изменить существо"
+
+#удалить существо
+@router.post("/delete")
+def delete():
+    return f"Удалить существо"
+    # try:
+    #     return service.delete(name)
+    # except Missing as exc:
+    #     raise HTTPException(status_code=404, detail=exc.msg)
+
 @router.get("/{name}")
 def get_one(name) -> Creature:
     try:
@@ -54,13 +68,4 @@ def get_one(name) -> Creature:
     except Missing as exc:
         raise HTTPException(status_code=404, detail=exc.msg)
 
-# @router.patch("/{name}")
-# def modify(name, creature: Creature) -> Creature:
-#     return service.modify(name, creature)
 
-@router.delete("/{name}")
-def delete(name: str):
-    try:
-        return service.delete(name)
-    except Missing as exc:
-        raise HTTPException(status_code=404, detail=exc.msg)

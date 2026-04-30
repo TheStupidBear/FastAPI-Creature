@@ -22,6 +22,16 @@
  		<td>{{ explorer.country }}</td>
  		<td>{{ explorer.description }}</td>
  		<td>{{ explorer.user }}</td>
+ 		<td>
+ 			<form action="/explorer/edit" method="POST">
+    				<button type="submit">🖊️</button>
+			</form>
+ 		</td>
+ 		<td>
+ 			<form action="/explorer/delete" method="POST">
+    				<button type="submit">🗑️</button>
+			</form>
+ 		</td>
  	</tr>
  	{% endfor %}
  </table>

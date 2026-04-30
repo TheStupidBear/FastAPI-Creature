@@ -53,13 +53,14 @@ def get_one(name) -> Explorer | None:
     except Missing as exc:
         raise HTTPException(status_code=404, detail=exc.msg)
 
-# @router.patch("/")
-# def modify(explorer: Explorer) -> Explorer:
-#     return service.modify(explorer)
+#изменить исследователя
+@router.post("/edit")
+def modify():
+    return f"Изменить исследователя"
 
-@router.delete("/{name}")
-def delete(name: str):
-    try:
-        return service.delete(name)
-    except Missing as exc:
-        raise HTTPException(status_code=404, detail=exc.msg)
+#удалить исследователя
+@router.post("/delete")
+def delete():
+    return f"Удалить исследователя"
+
+
