@@ -46,21 +46,29 @@ def create(request: Request, get_user: get_user_depends,
     except Duplicate as exc:
         raise HTTPException(status_code=404, detail=exc.msg)
 
+
+#изменить исследователя
+@router.post("/edit")
+def modify(request: Request):
+    message_explorer = f"Изменить исследователя (в разработке)."
+    return template_obj.TemplateResponse("list_explorers.html",
+                                         {"request": request,
+                                          "explorers": service.get_all(),
+                                          "message_explorer": message_explorer})
+
+#удалить исследователя
+@router.post("/delete")
+def delete(request: Request):
+    message_explorer = f"Удалить исследователя (в разработке)."
+    return template_obj.TemplateResponse("list_explorers.html",
+                                         {"request": request,
+                                          "explorers": service.get_all(),
+                                          "message_explorer": message_explorer})
+
+
 @router.get("/{name}")
 def get_one(name) -> Explorer | None:
     try:
         return service.get_one(name)
     except Missing as exc:
         raise HTTPException(status_code=404, detail=exc.msg)
-
-#изменить исследователя
-@router.post("/edit")
-def modify():
-    return f"Изменить исследователя"
-
-#удалить исследователя
-@router.post("/delete")
-def delete():
-    return f"Удалить исследователя"
-
-

@@ -49,17 +49,21 @@ def create(request: Request, get_user: get_user_depends,
 
 #изменить существо
 @router.post("/edit")
-def modify():
-    return f"Изменить существо"
+def modify(request: Request):
+    message_creature = f"Изменить существо (в разработке)."
+    return template_obj.TemplateResponse("list_creatures.html",
+                                         {"request": request,
+                                          "creatures": service.get_all(),
+                                          "message_creature": message_creature})
 
 #удалить существо
 @router.post("/delete")
-def delete():
-    return f"Удалить существо"
-    # try:
-    #     return service.delete(name)
-    # except Missing as exc:
-    #     raise HTTPException(status_code=404, detail=exc.msg)
+def delete(request: Request):
+    message_creature = f"Удалить существо (в разработке)."
+    return template_obj.TemplateResponse("list_creatures.html",
+                                         {"request": request,
+                                          "creatures": service.get_all(),
+                                          "message_creature": message_creature})
 
 @router.get("/{name}")
 def get_one(name) -> Creature:
