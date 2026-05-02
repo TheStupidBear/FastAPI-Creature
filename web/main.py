@@ -7,6 +7,7 @@ from fastapi.templating import Jinja2Templates
 from web import explorer, creature, user, game
 
 
+
 app = FastAPI()
 app.include_router(explorer.router)
 app.include_router(creature.router)
@@ -29,6 +30,14 @@ app.add_middleware(
 
 parent_dir = Path(__file__).resolve().parent.parent
 template_obj = Jinja2Templates(directory=f"{parent_dir}/template")
+
+#обработчик ошибки 404
+@app.exception_handler(404)
+async def custom_404_handler(request: Request, exc: Exception):
+    error_message = "Страница не найдена"
+    return template_obj.TemplateResponse("main.html",
+                                         {"request": request,
+                                          "error_message": error_message,})
 
 #главная страница
 @app.get("/")
