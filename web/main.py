@@ -1,5 +1,6 @@
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.exceptions import RequestValidationError
 import uvicorn
 from pathlib import Path
 from fastapi.staticfiles import StaticFiles
@@ -38,6 +39,20 @@ async def custom_404_handler(request: Request, exc: Exception):
     return template_obj.TemplateResponse("main.html",
                                          {"request": request,
                                           "error_message": error_message,})
+
+#обработчик ошибок пустых форм
+@app.exception_handler(RequestValidationError)
+async def validation_exception_handler(request: Request, exc: RequestValidationError):
+    # Логирование ошибок для отладки
+    print(f"Ошибка валидации: {exc.errors()}")
+    error_message = "Ошибка ввода данных"
+    # Возврат HTML-страницы
+    return template_obj.TemplateResponse(
+        "main.html",
+        {"request": request, "errors": exc.errors(),
+         "error_message": error_message},
+        status_code=422
+    )
 
 #главная страница
 @app.get("/")
