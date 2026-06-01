@@ -33,13 +33,13 @@ parent_dir = Path(__file__).resolve().parent.parent
 template_obj = Jinja2Templates(directory=f"{parent_dir}/template")
 
 #обработчик ошибки 404
-@app.exception_handler(404)
-async def custom_404_handler(request: Request, exc: Exception):
-    print("Ошибка 404")
-    error_message = "Страница не найдена"
-    return template_obj.TemplateResponse("main.html",
-                                         {"request": request,
-                                          "error_message": error_message,})
+# @app.exception_handler(404)
+# async def custom_404_handler(request: Request, exc: Exception):
+#     print("Ошибка 404")
+#     error_message = "Страница не найдена"
+#     return template_obj.TemplateResponse("main.html",
+#                                          {"request": request,
+#                                           "error_message": error_message})
 
 #обработчик ошибок пустых форм
 @app.exception_handler(RequestValidationError)
