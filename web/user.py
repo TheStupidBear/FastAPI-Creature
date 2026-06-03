@@ -24,6 +24,10 @@ def get_current_user(credentials: Annotated[HTTPBasicCredentials, Depends(securi
 #зависимость (только для авторизованных пользователей)
 get_user_depends = Annotated[dict, Depends(get_current_user)]
 
+#получение своих данных
+@router.get("/me")
+def read_current_user(credentials: Annotated[HTTPBasicCredentials, Depends(security)]):
+    return {"username": credentials.username, "password": credentials.password}
 
 #отправка формы (войти в учетную запись)
 @router.post("/login")
