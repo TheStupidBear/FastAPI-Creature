@@ -26,8 +26,8 @@ router = APIRouter(prefix="/user")
 #создание схемы oauth2
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/user/token")
 
-# parent_dir = Path(__file__).resolve().parent.parent
-# template_obj = Jinja2Templates(directory=f"{parent_dir}/template")
+parent_dir = Path(__file__).resolve().parent.parent
+template_obj = Jinja2Templates(directory=f"{parent_dir}/template")
 
 def fake_hash_password(password: str):
     return "fakehashed" + password
@@ -54,7 +54,7 @@ async def get_current_user(token: Annotated[str, Depends(oauth2_scheme)]):
         )
     return user
 
-@router.post("/token")
+@router.post("/check_login")
 async def login(form_data: Annotated[OAuth2PasswordRequestForm, Depends()]):
     user_dict = fake_users_db.get(form_data.username)
     if not user_dict:
@@ -69,6 +69,14 @@ async def login(form_data: Annotated[OAuth2PasswordRequestForm, Depends()]):
 @router.get("/me")
 async def read_users_me(current_user: Annotated[User, Depends(get_current_user)]):
     return current_user
+
+@router.post("/login")
+def get_all(request: Request):
+    return template_obj.TemplateResponse("login.html",
+                                         {"request": request})
+# @router.post("/login")
+# async def read_users_me():
+#     return "current_user"
 
 # #отправка формы (войти в учетную запись)
 # @router.post("/login")
