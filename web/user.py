@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Request, Form, Depends, HTTPException, status
+from fastapi import APIRouter, Request, Form, Depends, HTTPException, status, Header
 from pathlib import Path
 from fastapi.templating import Jinja2Templates
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
@@ -6,7 +6,7 @@ import secrets
 from typing import Annotated
 from service import user as service
 from data.user import init_user
-from model.user import User
+from model.user import User, Token, TokenData
 
 fake_users_db = {
     "johndoe": {
@@ -24,7 +24,7 @@ router = APIRouter(prefix="/user")
 # #создание таблицы БД
 # init_user()
 #создание схемы oauth2
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/user/token")
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="user/token")
 
 parent_dir = Path(__file__).resolve().parent.parent
 template_obj = Jinja2Templates(directory=f"{parent_dir}/template")
@@ -35,6 +35,7 @@ def fake_hash_password(password: str):
 def get_user(db, username: str):
     if username in db:
         user_dict = db[username]
+        print(f"Модель User: {User(**user_dict)}")
         return User(**user_dict)
 
 def fake_decode_token(token):
@@ -44,8 +45,10 @@ def fake_decode_token(token):
     return user
 
 
-async def get_current_user(token: Annotated[str, Depends(oauth2_scheme)]):
+def get_current_user(token: Annotated[str, Depends(oauth2_scheme)]):
     user = fake_decode_token(token)
+    print(f"token: {token}")
+    print(f"user: {user}")
     if not user:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
@@ -54,7 +57,7 @@ async def get_current_user(token: Annotated[str, Depends(oauth2_scheme)]):
         )
     return user
 
-@router.post("/check_login")
+@router.post("/token")
 async def login(form_data: Annotated[OAuth2PasswordRequestForm, Depends()]):
     user_dict = fake_users_db.get(form_data.username)
     if not user_dict:
@@ -64,10 +67,10 @@ async def login(form_data: Annotated[OAuth2PasswordRequestForm, Depends()]):
     if not hashed_password == user.hashed_password:
         raise HTTPException(status_code=400, detail="Incorrect username or password")
 
-    return {"access_token": user.username, "token_type": "bearer"}
+    return Token(access_token=user.username, token_type="bearer")
 
 @router.get("/me")
-async def read_users_me(current_user: Annotated[User, Depends(get_current_user)]):
+def read_users_me(current_user: Annotated[User, Depends(get_current_user)]):
     return current_user
 
 @router.post("/login")
