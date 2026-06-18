@@ -84,9 +84,6 @@ def login_user(username: str, password: str) -> bool:
 
 
 
-
-
-
 def get_one(username: str) -> User:
     conn = sqlite3.connect(db_path)
     curs = conn.cursor()
