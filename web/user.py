@@ -8,3 +8,4 @@ from service import user as service
 from data.user import init_user
 from model.user import User, Token
 
+router = APIRouter(prefix="/user")
