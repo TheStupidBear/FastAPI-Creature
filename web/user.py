@@ -89,11 +89,11 @@ def get_all(request: Request):
 
 
 
-# #страница регистрации
-# @router.get("/registration")
-# async def reg(request: Request):
-#     return template_obj.TemplateResponse("registration.html",
-#                                          {"request": request})
+#страница регистрации
+@router.get("/registration")
+async def reg(request: Request):
+    return template_obj.TemplateResponse("registration.html",
+                                         {"request": request})
 #
 #
 # #post запрос регистрации
