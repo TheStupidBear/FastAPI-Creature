@@ -21,12 +21,14 @@ origins = [
     "http://localhost:8080",
     "http://127.0.0.1:8000/"
 ]
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=origins,
+    allow_origins=["*"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
+    expose_headers=["Authorization"] # Фронтенд увидит этот заголовок
 )
 
 parent_dir = Path(__file__).resolve().parent.parent

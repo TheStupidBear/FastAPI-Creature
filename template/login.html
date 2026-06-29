@@ -2,7 +2,7 @@
 
 {% block content %}
 	<h1>Войти</h1>
-	<form action="/user/check_login" method="post">
+	<form action="/user/token" method="post">
 		<label for="name">Логин:</label>
 		<input type="text" name="username">
 		<p>
@@ -11,4 +11,5 @@
 		</p>
 		<input type="submit">
 	</form>
+	<h1>{{message_error}}</h1>
 {% endblock %}
