@@ -44,18 +44,18 @@ template_obj = Jinja2Templates(directory=f"{parent_dir}/template")
 #                                           "error_message": error_message})
 
 #обработчик ошибок пустых форм
-@app.exception_handler(RequestValidationError)
-async def validation_exception_handler(request: Request, exc: RequestValidationError):
-    # Логирование ошибок для отладки
-    print(f"Ошибка валидации: {exc.errors()}")
-    error_message = "Ошибка ввода данных"
-    # Возврат HTML-страницы
-    return template_obj.TemplateResponse(
-        "main.html",
-        {"request": request, "errors": exc.errors(),
-         "error_message": error_message},
-        status_code=422
-    )
+# @app.exception_handler(RequestValidationError)
+# async def validation_exception_handler(request: Request, exc: RequestValidationError):
+#     # Логирование ошибок для отладки
+#     print(f"Ошибка валидации: {exc.errors()}")
+#     error_message = "Ошибка ввода данных"
+#     # Возврат HTML-страницы
+#     return template_obj.TemplateResponse(
+#         "main.html",
+#         {"request": request, "errors": exc.errors(),
+#          "error_message": error_message},
+#         status_code=422
+#     )
 
 #главная страница
 @app.get("/")
