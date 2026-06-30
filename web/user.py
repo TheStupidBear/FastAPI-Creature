@@ -3,7 +3,7 @@ from pathlib import Path
 from fastapi.templating import Jinja2Templates
 from service import user as user_service
 from data.user import init_user
-from model.user import User, TokenGet
+from model.user import User
 
 
 
@@ -18,7 +18,7 @@ template_obj = Jinja2Templates(directory=f"{parent_dir}/template")
 
 
 
-@router.post("/login")
+@router.post("/get_token")
 async def login(user: User):
     #получаем токен и возращаем клиенту
     token = user_service.login_for_access_token(user.username, user.password)
