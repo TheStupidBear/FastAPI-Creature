@@ -36,7 +36,7 @@ def login_for_access_token(username:str, password:str) -> Token:
         )
 
 
-def get_current_user(self, token: str):
+def get_current_user(token: str):
     # заранее подготовим исключение
     credentials_exception = HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
