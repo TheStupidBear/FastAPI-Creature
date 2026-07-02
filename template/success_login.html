@@ -1,0 +1,21 @@
+{% extends 'main.html' %}
+
+{% block content %}
+	<script>
+		try {
+			 // Внедряем данные из контекста шаблона в JS
+        	const accessToken = {{ token | tojson }};
+			// Сохраняем токен в localStorage с ключом 'token'
+			localStorage.setItem('token', accessToken);
+		} 
+		catch (error) {
+  			// Код, который выполнится при возникновении ошибки
+  			console.error('Возникла ошибка:', error.message);
+		}
+		// 1. Получаем токен из хранилища
+		const token = localStorage.getItem('token');
+		alert(token);
+		
+	</script>	
+
+{% endblock %}

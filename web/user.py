@@ -18,10 +18,12 @@ async def top(request: Request):
 
 
 @router.post("/get_token")
-async def login(username: Annotated[str, Form()], password: Annotated[str, Form()]):
+async def login(request: Request, username: Annotated[str, Form()], password: Annotated[str, Form()]):
     #получаем токен и возращаем клиенту
     token = user_service.login_for_access_token(username, password)
-    return token
+    return template_obj.TemplateResponse("success_login.html",
+                                         {"request": request,
+                                          "token": token.access_token})
 
 @router.post("/me")
 async def read_me(token: str):

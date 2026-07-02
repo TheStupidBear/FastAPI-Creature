@@ -19,7 +19,7 @@ def create_access_token(data:dict, expires_delta: timedelta) -> str:
 def login_for_access_token(username:str, password:str) -> Token:
     # если есть такой пользователь в БД
     if data.login_user(username, password):
-        access_token_expires = timedelta(minutes=15)  # время действия токена
+        access_token_expires = timedelta(minutes=30)  # время действия токена
         # данные для кодирования
         access_token = create_access_token(
             data={"username": username, "password": password},
@@ -51,7 +51,7 @@ def get_current_user(token: str):
         password: str = payload.get("password")
         exp: str = payload.get("exp")
 
-        # если в токене нет поля email
+        # если в токене нет поля username
         if username is None:
             raise credentials_exception
         # если время жизни токена истекло
